@@ -726,14 +726,22 @@ function fmtKakao(r) {
 }
 function buildSumText(date, list) {
   var days='일월화수목금토', d=new Date(date+'T00:00:00');
+  var mm=d.getMonth()+1, dd=d.getDate(), day=days[d.getDay()];
   var siteMap={};
   list.forEach(function(r){ if(!siteMap[r.site]) siteMap[r.site]=[]; siteMap[r.site].push(r); });
-  var txt='⚡ [작업일보 취합] '+date+' ('+days[d.getDay()]+')\n━━━━━━━━━━━━━━━━━━';
-  Object.keys(siteMap).forEach(function(site){
-    txt+='\n📍 '+site;
-    siteMap[site].forEach(function(r){
-      var t = r.start&&r.end ? r.start.replace(':','')+'~'+r.end.replace(':','') : '';
-      txt+='\n  '+r.name+' '+r.rank+' '+t+' | '+r.work.replace(/\n/g,' ').slice(0,40)+(r.work.length>40?'…':'');
+  var sites=Object.keys(siteMap);
+  var totalPeople=0;
+  var txt='⚡ 작업일보 '+mm+'/'+dd+'('+day+')\n━━━━━━━━━━━━━━';
+  sites.forEach(function(site){
+    var members=siteMap[site];
+    totalPeople+=members.length;
+    txt+='\n\n📍 '+site+' ('+members.length+'명)';
+    members.forEach(function(r, i){
+      var isLast = i===members.length-1;
+      var prefix = isLast ? '└ ' : '├ ';
+      var work = r.work.replace(/\n/g,' ').slice(0,35)+(r.work.length>35?'…':'');
+      txt+='\n'+prefix+r.name+' | '+work;
+      if(r.note) txt+=' ⚠️';
     });
   });
   return txt.trim();
