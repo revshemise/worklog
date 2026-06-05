@@ -739,7 +739,7 @@ function buildSumText(date, list) {
     members.forEach(function(r, i){
       var isLast = i===members.length-1;
       var prefix = isLast ? '└ ' : '├ ';
-      var work = r.work.replace(/\n/g,' ').slice(0,35)+(r.work.length>35?'…':'');
+      var work = r.work.replace(/\n/g,' ').slice(0,10)+(r.work.length>10?'…':'');
       txt+='\n'+prefix+r.name+' | '+work;
       if(r.note) txt+=' ⚠️';
     });
